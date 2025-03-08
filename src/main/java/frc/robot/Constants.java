@@ -152,7 +152,7 @@ public final class Constants {
     public static final double minimumElevatorHeight = (newRobot)? 0.165 : 0.175; // Furthest possible is 0.164
     public static final double maximumElevatorHeight = (newRobot)? 0.975 : 0.675; // Furthest possible is 0.99
 
-    public static final double coralStationPosition = (newRobot)? 0.496 : 0.405; // Scoring position 0
+    public static final double coralStationPosition = (newRobot)? 0.500 : 0.405; // Scoring position 0
     public static final double level1ScoringPosition = (newRobot)? 0.411 : 0.32;
     public static final double level2ScoringPosition = (newRobot)? 0.511 : 0.51;
     public static final double level3ScoringPosition = (newRobot)? 0.777 : 0.669;
