@@ -143,8 +143,8 @@ public final class Constants {
     public static final int elevatorMotorCanId = 27;
 
     public static final double kP = 20;
-    public static final double kI = 0;
-    public static final double kD = 0.05;
+    public static final double kI = 2.5;
+    public static final double kD = 1.5;
 
     public static final double positionTolerence = 0.001;
 
