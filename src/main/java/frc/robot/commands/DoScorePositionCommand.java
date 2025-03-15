@@ -86,6 +86,17 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
 
     }
 
+    private boolean hasRightCameraDetection() {
+        PhotonCamera selectedCameraIndex = VisionConstants.FRONT_RIGHT_CAMERA;  // Front camera for right-side approach
+            
+        int detectedTag = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(selectedCameraIndex);
+        List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.scoringAprilTags)
+                .boxed()
+                .toList();
+        return scoringTagsList.contains(detectedTag)
+                && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
+    }
+
     private boolean hasLeftCameraDetection() {
         PhotonCamera selectedCameraIndex = VisionConstants.FRONT_LEFT_CAMERA;  // Front camera for right-side approach
             
