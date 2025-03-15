@@ -27,10 +27,10 @@ import frc.robot.Constants.VisionConstants;
 
 public class PoseEstimatorSubsystem extends SubsystemBase {
 
-  private CameraDetection FRONT_LEFT_DETECTION = null;
-  private CameraDetection FRONT_RIGHT_DETECTION = null;
-  private CameraDetection BACK_LEFT_DETECTION = null;
-  private CameraDetection BACK_RIGHT_DETECTION = null;
+  private CameraDetection FRONT_LEFT_DETECTION;
+  private CameraDetection FRONT_RIGHT_DETECTION;
+  private CameraDetection BACK_LEFT_DETECTION;
+  private CameraDetection BACK_RIGHT_DETECTION;
 
   private final SwerveDriveOdometry poseEstimator;
   private Rotation2d currentHeading;
@@ -46,6 +46,86 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                         new SwerveModulePosition(),
                         new SwerveModulePosition()
                 });
+
+        
+        /*
+         * FRONT LEFT CAMERA
+         */
+
+         // Create and store detection info for this camera.
+         CameraDetection FL_detection = new CameraDetection(
+           0,
+           0,
+           new Rotation2d(),
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           VisionConstants.FRONT_LEFT_CAMERA);
+ 
+         FRONT_LEFT_DETECTION = FL_detection;
+         logCameraDetection(FRONT_LEFT_DETECTION);
+ 
+         /*
+          * FRONT RIGHT CAMERA
+          */
+
+         // Create and store detection info for this camera.
+         CameraDetection FR_detection = new CameraDetection(
+           0,
+           0,
+           new Rotation2d(),
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           VisionConstants.FRONT_RIGHT_CAMERA);
+ 
+         FRONT_RIGHT_DETECTION = FR_detection;
+         logCameraDetection(FRONT_RIGHT_DETECTION);
+         /*
+          * BACK LEFT CAMERA
+          */
+
+         // Create and store detection info for this camera.
+         CameraDetection BL_detection = new CameraDetection(
+           0,
+           0,
+           new Rotation2d(),
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           VisionConstants.BACK_LEFT_CAMERA);
+ 
+         BACK_LEFT_DETECTION = BL_detection;
+         logCameraDetection(BACK_LEFT_DETECTION);
+ 
+         /*
+          * BACK RIGHT CAMERA
+          */
+ 
+         // Create and store detection info for this camera.
+         CameraDetection BR_detection = new CameraDetection(
+           0,
+           0,
+           new Rotation2d(),
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           VisionConstants.BACK_RIGHT_CAMERA);
+ 
+         BACK_RIGHT_DETECTION = BR_detection;
+         logCameraDetection(BACK_RIGHT_DETECTION);
     }
   
     public void update(Rotation2d gyroRotation, SwerveModulePosition[] modulePositions) {
@@ -61,14 +141,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         PhotonPipelineResult FL_result = VisionConstants.FRONT_LEFT_CAMERA.getLatestResult();
         PhotonTrackedTarget FL_bestTarget = FL_result.getBestTarget();
-        Transform3d FL_cameraToTarget = FL_bestTarget.getBestCameraToTarget();
+        Transform3d FL_cameraToTarget = (FL_bestTarget != null)? FL_bestTarget.getBestCameraToTarget() : new Transform3d();
         Transform3d FL_robotToTarget = VisionConstants.FRONT_LEFT_CAMERA_LOCATION.plus(FL_cameraToTarget);
         Translation3d FL_translation = FL_robotToTarget.getTranslation();
         Rotation3d FL_rotation = FL_robotToTarget.getRotation();
 
         // Create and store detection info for this camera.
         CameraDetection FL_detection = new CameraDetection(
-          FL_bestTarget.getFiducialId(),
+          (FL_bestTarget != null)? FL_bestTarget.getFiducialId() : -1,
           FL_result.getTimestampSeconds(),
           gyroRotation,
           FL_translation.getMeasureX().in(Meter),
@@ -88,14 +168,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         PhotonPipelineResult FR_result = VisionConstants.FRONT_RIGHT_CAMERA.getLatestResult();
         PhotonTrackedTarget FR_bestTarget = FR_result.getBestTarget();
-        Transform3d FR_cameraToTarget = FR_bestTarget.getBestCameraToTarget();
+        Transform3d FR_cameraToTarget = (FR_bestTarget != null)? FR_bestTarget.getBestCameraToTarget() : new Transform3d();
         Transform3d FR_robotToTarget = VisionConstants.FRONT_RIGHT_CAMERA_LOCATION.plus(FR_cameraToTarget);
         Translation3d FR_translation = FR_robotToTarget.getTranslation();
         Rotation3d FR_rotation = FR_robotToTarget.getRotation();
 
         // Create and store detection info for this camera.
         CameraDetection FR_detection = new CameraDetection(
-          FR_bestTarget.getFiducialId(),
+          (FR_bestTarget != null)? FR_bestTarget.getFiducialId() : -1,
           FR_result.getTimestampSeconds(),
           gyroRotation,
           FR_translation.getMeasureX().in(Meter),
@@ -114,14 +194,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         PhotonPipelineResult BL_result = VisionConstants.BACK_LEFT_CAMERA.getLatestResult();
         PhotonTrackedTarget BL_bestTarget = BL_result.getBestTarget();
-        Transform3d BL_cameraToTarget = BL_bestTarget.getBestCameraToTarget();
+        Transform3d BL_cameraToTarget = (BL_bestTarget != null)? BL_bestTarget.getBestCameraToTarget() : new Transform3d();
         Transform3d BL_robotToTarget = VisionConstants.BACK_LEFT_CAMERA_LOCATION.plus(BL_cameraToTarget);
         Translation3d BL_translation = BL_robotToTarget.getTranslation();
         Rotation3d BL_rotation = BL_robotToTarget.getRotation();
 
         // Create and store detection info for this camera.
         CameraDetection BL_detection = new CameraDetection(
-          BL_bestTarget.getFiducialId(),
+          (BL_bestTarget != null)? BL_bestTarget.getFiducialId() : -1,
           BL_result.getTimestampSeconds(),
           gyroRotation,
           BL_translation.getMeasureX().in(Meter),
@@ -141,14 +221,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         PhotonPipelineResult BR_result = VisionConstants.BACK_RIGHT_CAMERA.getLatestResult();
         PhotonTrackedTarget BR_bestTarget = BR_result.getBestTarget();
-        Transform3d BR_cameraToTarget = BR_bestTarget.getBestCameraToTarget();
+        Transform3d BR_cameraToTarget = (BR_bestTarget != null)? BR_bestTarget.getBestCameraToTarget() : new Transform3d();
         Transform3d BR_robotToTarget = VisionConstants.BACK_RIGHT_CAMERA_LOCATION.plus(BR_cameraToTarget);
         Translation3d BR_translation = BR_robotToTarget.getTranslation();
         Rotation3d BR_rotation = BR_robotToTarget.getRotation();
 
         // Create and store detection info for this camera.
         CameraDetection BR_detection = new CameraDetection(
-          BR_bestTarget.getFiducialId(),
+          (BR_bestTarget != null)? BR_bestTarget.getFiducialId() : -1,
           BR_result.getTimestampSeconds(),
           gyroRotation,
           BR_translation.getMeasureX().in(Meter),
@@ -185,7 +265,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         BACK_LEFT_DETECTION,
         BACK_RIGHT_DETECTION
       };
-      CameraDetection mostRecent = null;
+      CameraDetection mostRecent = FRONT_LEFT_DETECTION;
       for (CameraDetection detection : detections) {
           if (detection != null) {
               if (mostRecent == null || detection.detectionTimestamp > mostRecent.detectionTimestamp) {
@@ -198,23 +278,23 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
   private CameraDetection getDetectionOf(PhotonCamera camera) {
 
-    if (camera.equals(VisionConstants.FRONT_LEFT_CAMERA)) {
-        return FRONT_LEFT_DETECTION;
-    }
+    switch (camera.getName()) {
+        case VisionConstants.FL_CAMERA_NAME:
+            return FRONT_LEFT_DETECTION;
+    
+        case VisionConstants.FR_CAMERA_NAME:
+            return FRONT_RIGHT_DETECTION;
+    
+        case VisionConstants.BL_CAMERA_NAME:
+            return BACK_LEFT_DETECTION;
 
-    if (camera.equals(VisionConstants.FRONT_RIGHT_CAMERA)) {
-      return FRONT_RIGHT_DETECTION;
-    }
+        case VisionConstants.BR_CAMERA_NAME:
+            return BACK_RIGHT_DETECTION;
 
-    if (camera.equals(VisionConstants.BACK_LEFT_CAMERA)) {
-      return BACK_LEFT_DETECTION;
+        default:
+            return null;
+            
     }
-
-    if (camera.equals(VisionConstants.BACK_RIGHT_CAMERA)) {
-      return BACK_RIGHT_DETECTION;
-    }
-
-    return null;
         
   }
 
@@ -265,6 +345,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         return detection != null ? detection.bearingToTagDeg : Double.NaN;
     }
 
+    public double getBearingToTagDeg(PhotonCamera camera) {
+        CameraDetection detection = getDetectionOf(camera);
+        return detection != null ? detection.bearingToTagDeg : Double.NaN;
+    }
+
     /**
      * The tag's orientation relative to the robot. 0° means tag and robot are
      * parallel.
@@ -304,12 +389,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * @return true if either side camera has a recent detection.
      */
     public boolean hasSideCameraDetection() {
-        double currentTime = Timer.getFPGATimestamp();
-        boolean hasLeftDetection = BACK_LEFT_DETECTION != null &&
-                (currentTime - BACK_LEFT_DETECTION.detectionTimestamp) < 1.0;
-        boolean hasRightDetection = BACK_RIGHT_DETECTION != null &&
-                (currentTime - BACK_RIGHT_DETECTION.detectionTimestamp) < 1.0;
-        return hasLeftDetection || hasRightDetection;
+        return 
+            hasCameraDetectedTag(VisionConstants.BACK_LEFT_CAMERA) || 
+            hasCameraDetectedTag(VisionConstants.BACK_RIGHT_CAMERA);
     }
 
     /**
@@ -318,12 +400,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * @return true if either front camera has a recent detection.
      */
     public boolean hasFrontCameraDetection() {
-        double currentTime = Timer.getFPGATimestamp();
-        boolean hasLeftDetection = FRONT_LEFT_DETECTION != null &&
-                (currentTime - FRONT_LEFT_DETECTION.detectionTimestamp) < 1.0;
-        boolean hasRightDetection = FRONT_RIGHT_DETECTION != null &&
-                (currentTime - FRONT_RIGHT_DETECTION.detectionTimestamp) < 1.0;
-        return hasLeftDetection || hasRightDetection;
+        return 
+            hasCameraDetectedTag(VisionConstants.FRONT_LEFT_CAMERA) || 
+            hasCameraDetectedTag(VisionConstants.FRONT_RIGHT_CAMERA);
     }
 
     /**
