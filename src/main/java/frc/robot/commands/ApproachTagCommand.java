@@ -5,13 +5,11 @@ import org.photonvision.PhotonCamera;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class ApproachTagCommand extends Command {
     private final DriveSubsystem drive;
     private final double desiredDistance;
-    private final double desiredAngle;
     private final PIDController distanceController;
     private final PIDController lateralController;
     private final PIDController rotationController;
@@ -37,7 +35,6 @@ public class ApproachTagCommand extends Command {
         this.drive = drive;
         this.desiredDistance = desiredDistance;
         this.desiredLateralOffset = desiredOffset;
-        this.desiredAngle = angle;
         this.isIntake = false;
         this.selectedCamera = aligningCamera;
         addRequirements(drive);
