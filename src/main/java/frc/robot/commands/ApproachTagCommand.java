@@ -88,7 +88,7 @@ public class ApproachTagCommand extends Command {
                 selectedCamera = null; // No specific camera selected; use any available detection
                 System.out.println("Non-intake mode: No lateral offset specified, using any available camera");
             }
-            double curDistance = drive.getPoseEstimatorSubsystem().getDistanceToTag(selectedCameraIndex);
+            double curDistance = drive.getPoseEstimatorSubsystem().getDistanceToTag(selectedCamera);
 
             if (curDistance > 1) {
                 rotationController.setP(0.04);
