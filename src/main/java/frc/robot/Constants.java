@@ -137,20 +137,6 @@ public final class Constants {
     public static final double kDriveDeadband = 0.08;
 
     public static final double kTriggerThreshold = 0.1;
-
-    public static final double scoringDistanceRight = 0.58;
-    public static final double scoringDistanceLeft = 0.48;
-
-    public static final double rightCoralIntakeDistance = 0.40;
-    public static final double leftCoralIntakeDistance = 0.40;
-
-    public static final double leftScoringOffset = -0.161;
-    public static final double rightScoringOffset = 0.165;
-
-    // TODO tune these offsets to align with the grooves on the intake station
-    public static final double intakePositionLeft = -0.71;
-    public static final double intakePositionRight = 0.51;
-
     public static final double doublePressBuffer = 0.5;
   }
 
@@ -167,6 +153,16 @@ public final class Constants {
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  }
+
+  public static final class AlignmentConstants {
+    public static final double REEF_SCORING_DIST = 0.365;
+
+    public static final double STATION_DIST_TO_RIGHT = 1.52;
+    public static final double STATION_LAT_TO_RIGHT = -0.04;
+
+    public static final double STATION_DIST_TO_LEFT = 1.52;
+    public static final double STATION_LAT_TO_LEFT = -0.04;
   }
 
   public static final class NeoMotorConstants {
