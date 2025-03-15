@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BooleanSupplier;
-
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.CoralManipulatorConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CoralManipulatorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -33,11 +30,17 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
         public DoIntakeCoralFromStationCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
                         DriveSubsystem drive) {
                 this.drive = drive;
-                this.desiredLateralOffset = -0.04;
-                this.desiredDistance = 1.52;
-                this.desiredAngle = 180;
                 this.aligningCamera = (hasRightCameraDetection())? VisionConstants.BACK_RIGHT_CAMERA 
                                     : (hasLeftCameraDetection())? VisionConstants.BACK_LEFT_CAMERA : null;
+
+                if (aligningCamera.getName().equals(VisionConstants.BL_CAMERA_NAME)) {
+                        this.desiredLateralOffset = -0.04;
+                        this.desiredDistance = 1.52;
+                } else { // Back Right Camera
+                        this.desiredLateralOffset = -0.04;
+                        this.desiredDistance = 1.52;
+                }
+                this.desiredAngle = 180;
 
                 System.out.printf("ElevatorCommand created - Target lateral offset: %.2f m, Target distance: %.2f m%n",
                                 desiredLateralOffset, desiredDistance);
@@ -79,16 +82,6 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
                         }),
                         () -> aligningCamera != null && hasCameraDetectedTag(aligningCamera)));
 
-        }
-
-        private boolean hasTag() {
-                int detectedTagRight = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(VisionConstants.BACK_RIGHT_CAMERA);
-                int detectedTagLeft = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(VisionConstants.BACK_LEFT_CAMERA);
-                List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.intakeStationAprilTags)
-                                .boxed()
-                                .toList();
-                return (scoringTagsList.contains(detectedTagLeft) || scoringTagsList.contains(detectedTagRight))
-                                && drive.getPoseEstimatorSubsystem().hasSideCameraDetection();
         }
 
         private boolean hasRightCameraDetection() {
