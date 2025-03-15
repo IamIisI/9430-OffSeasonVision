@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -24,22 +26,23 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
         private final DriveSubsystem drive;
         private final double desiredLateralOffset;
         private final double desiredDistance;
+        private final double desiredAngle;
+        private final PhotonCamera aligningCamera;
 
-        @SuppressWarnings("unlikely-arg-type")
+
         public DoIntakeCoralFromStationCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
                         DriveSubsystem drive) {
                 this.drive = drive;
-                this.desiredLateralOffset = (drive.getPoseEstimatorSubsystem().getLastDetectionCamera().equals(VisionConstants.FRONT_RIGHT_CAMERA))
-                                ? OIConstants.intakePositionLeft
-                                : OIConstants.intakePositionRight;
-                this.desiredDistance = (drive.getPoseEstimatorSubsystem().getLastDetectionCamera().equals(VisionConstants.FRONT_RIGHT_CAMERA))
-                                ? OIConstants.rightCoralIntakeDistance
-                                : OIConstants.leftCoralIntakeDistance;
+                this.desiredLateralOffset = -0.04;
+                this.desiredDistance = 1.52;
+                this.desiredAngle = 180;
+                this.aligningCamera = (hasRightCameraDetection())? VisionConstants.BACK_RIGHT_CAMERA 
+                                    : (hasLeftCameraDetection())? VisionConstants.BACK_LEFT_CAMERA : null;
 
                 System.out.printf("ElevatorCommand created - Target lateral offset: %.2f m, Target distance: %.2f m%n",
                                 desiredLateralOffset, desiredDistance);
 
-                addRequirements(drive, elevator);
+                addRequirements(drive, elevator, coralSubsystem);
 
                 addCommands(
                         new ConditionalCommand(
@@ -48,13 +51,13 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
                                         new InstantCommand(() -> {
                                                 this.drive.drive(0, 0, 0, false);
                                         }),
-                                        new StrafeToAlignCommand(drive, desiredLateralOffset, true).withTimeout(1.5),
+                                        // new StrafeToAlignCommand(drive, desiredLateralOffset, true).withTimeout(1.5),
                                         new MoveElevator(elevator, 0),
                                         new PivotCoral(coralSubsystem,
                                                         CoralManipulatorConstants.intakePivotPosition),
                                         Commands.either(
-                                                new ApproachTagCommand(this.drive, desiredDistance, desiredLateralOffset, true), 
-                                                new ApproachTagCommand(this.drive, desiredDistance, desiredLateralOffset, true).withTimeout(3),
+                                                new ApproachStationCommand(this.drive, desiredDistance, desiredLateralOffset, desiredAngle, aligningCamera), 
+                                                new ApproachStationCommand(this.drive, desiredDistance, desiredLateralOffset, desiredAngle, aligningCamera).withTimeout(3),
                                                 () -> !DriverStation.isAutonomous()),
                                         new IntakeCoral(coralSubsystem, -1, 3),
                                         new SetCoralSpeed(coralSubsystem, 0),
@@ -74,7 +77,7 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
                                 ControllerUtils.Rumble(
                                         RobotContainer.c_operatorController.getHID(), 0.2, 1);
                         }),
-                        () -> hasTag()));
+                        () -> aligningCamera != null && hasCameraDetectedTag(aligningCamera)));
 
         }
 
@@ -86,5 +89,33 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
                                 .toList();
                 return (scoringTagsList.contains(detectedTagLeft) || scoringTagsList.contains(detectedTagRight))
                                 && drive.getPoseEstimatorSubsystem().hasSideCameraDetection();
+        }
+
+        private boolean hasRightCameraDetection() {
+                PhotonCamera selectedCameraIndex = VisionConstants.BACK_RIGHT_CAMERA;  // Front camera for left-side approach
+                
+                int detectedTag = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(selectedCameraIndex);
+                List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.intakeStationAprilTags)
+                        .boxed()
+                        .toList();
+                return scoringTagsList.contains(detectedTag)
+                        && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
+        }
+        
+        private boolean hasLeftCameraDetection() {
+                PhotonCamera selectedCameraIndex = VisionConstants.BACK_LEFT_CAMERA;  // Front camera for right-side approach
+                        
+                int detectedTag = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(selectedCameraIndex);
+                List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.intakeStationAprilTags)
+                        .boxed()
+                        .toList();
+                return scoringTagsList.contains(detectedTag)
+                        && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
+        }
+
+        private boolean hasCameraDetectedTag(PhotonCamera camera) {
+                return ((camera.getName().equals(VisionConstants.BR_CAMERA_NAME)) 
+                        ? hasRightCameraDetection() 
+                        : hasLeftCameraDetection());
         }
 }
