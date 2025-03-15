@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.AlignmentConstants;
 import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotContainer;
@@ -22,21 +23,16 @@ import frc.utils.ControllerUtils;
 
 public class DoScorePositionCommand extends SequentialCommandGroup {
     private final DriveSubsystem drive;
-    private final double desiredLateralOffset;
     private final double desiredDistance;
 
 
     public DoScorePositionCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
             DriveSubsystem drive, int scoringPosition, double pivotHeight, PhotonCamera aligningCamera) {
         this.drive = drive;
-        this.desiredLateralOffset = 0;
-        this.desiredDistance = 0.365;
-
-        System.out.printf("ElevatorCommand created - Target lateral offset: %.2f m, Target distance: %.2f m%n",
-                desiredLateralOffset, desiredDistance);
-
+        this.desiredDistance = AlignmentConstants.REEF_SCORING_DIST;
         
         addRequirements(drive, elevator);
+
 
         addCommands(
                 new ConditionalCommand(
