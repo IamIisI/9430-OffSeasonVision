@@ -81,10 +81,15 @@ public final class Constants {
   public static final class VisionConstants {
     public static final int[] kAlignApriltagIDs = new int[] { 6 };
 
-    public static final PhotonCamera FRONT_LEFT_CAMERA = new PhotonCamera("Arducam_FL");
-    public static final PhotonCamera FRONT_RIGHT_CAMERA = new PhotonCamera("Arducam_FR");
-    public static final PhotonCamera BACK_LEFT_CAMERA = new PhotonCamera("Arducam_BL");
-    public static final PhotonCamera BACK_RIGHT_CAMERA = new PhotonCamera("Arducam_BR");
+    public static final String FL_CAMERA_NAME = "Arducam_FL";
+    public static final String FR_CAMERA_NAME = "Arducam_FR";
+    public static final String BL_CAMERA_NAME = "Arducam_BL";
+    public static final String BR_CAMERA_NAME = "Arducam_BR";
+
+    public static final PhotonCamera FRONT_LEFT_CAMERA = new PhotonCamera(FL_CAMERA_NAME);
+    public static final PhotonCamera FRONT_RIGHT_CAMERA = new PhotonCamera(FR_CAMERA_NAME);
+    public static final PhotonCamera BACK_LEFT_CAMERA = new PhotonCamera(BL_CAMERA_NAME);
+    public static final PhotonCamera BACK_RIGHT_CAMERA = new PhotonCamera(BR_CAMERA_NAME);
 
     public static final Transform3d FRONT_LEFT_CAMERA_LOCATION = 
       new Transform3d(
