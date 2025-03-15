@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,38 +84,6 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                         () -> hasCameraDetectedTag(aligningCamera)));
 
 
-    }
-
-    private boolean hasTag() {
-        PhotonCamera selectedCameraIndex = null;
-        if (desiredLateralOffset > 0) {
-            selectedCameraIndex = VisionConstants.FRONT_LEFT_CAMERA;  // Front camera for right-side approach
-            System.out.println("Non-intake mode: Using front camera index 0 for right-side approach");
-        } else if (desiredLateralOffset < 0) {
-            selectedCameraIndex = VisionConstants.FRONT_RIGHT_CAMERA;  // Front camera for left-side approach
-            System.out.println("Non-intake mode: Using front camera index 3 for left-side approach");
-        } else {
-            selectedCameraIndex = null; // No specific camera selected; use any available detection
-            System.out.println("Non-intake mode: No lateral offset specified, using any available camera");
-        }
-        if(selectedCameraIndex == null) return false;
-        int detectedTag = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(selectedCameraIndex);
-        List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.scoringAprilTags)
-                .boxed()
-                .toList();
-        return scoringTagsList.contains(detectedTag)
-                && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
-    }
-
-    private boolean hasRightCameraDetection() {
-        PhotonCamera selectedCameraIndex = VisionConstants.FRONT_RIGHT_CAMERA;  // Front camera for left-side approach
-        
-        int detectedTag = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(selectedCameraIndex);
-        List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.scoringAprilTags)
-                .boxed()
-                .toList();
-        return scoringTagsList.contains(detectedTag)
-                && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
     }
 
     private boolean hasLeftCameraDetection() {
