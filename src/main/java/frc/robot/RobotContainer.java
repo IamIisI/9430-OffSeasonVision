@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.CoralManipulatorConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DoScorePositionCommand;
 import frc.robot.commands.DoIntakeCoralFromStationCommand;
 import frc.robot.commands.MoveElevator;
@@ -114,46 +115,43 @@ public class RobotContainer {
                 // Register Score LP2 Left
                 NamedCommands.registerCommand("Score LP2 Left",
                                 new DoScorePositionCommand(
-                                                elevatorSubsystem,
-                                                coralManipulatorSubsystem,
-                                                m_robotDrive,
-                                                2, // Level 2 scoring position
-                                                OIConstants.leftScoringOffset,
-                                                OIConstants.scoringDistanceLeft,
-                                                CoralManipulatorConstants.levelTwoPivotPosition));
+                                        elevatorSubsystem,
+                                        coralManipulatorSubsystem,
+                                        m_robotDrive,
+                                        2,
+                                        CoralManipulatorConstants.levelTwoPivotPosition,
+                                        VisionConstants.FRONT_RIGHT_CAMERA));
+                                        
 
                 // Register Score LP3 Left
                 NamedCommands.registerCommand("Score LP3 Left",
                                 new DoScorePositionCommand(
-                                                elevatorSubsystem,
-                                                coralManipulatorSubsystem,
-                                                m_robotDrive,
-                                                3, // Level 3 scoring position
-                                                OIConstants.leftScoringOffset,
-                                                OIConstants.scoringDistanceLeft,
-                                                CoralManipulatorConstants.levelThreePivotPosition));
+                                        elevatorSubsystem,
+                                        coralManipulatorSubsystem,
+                                        m_robotDrive,
+                                        3,
+                                        CoralManipulatorConstants.levelThreePivotPosition,
+                                        VisionConstants.FRONT_RIGHT_CAMERA));
 
                 // Register Score LP2 Right
                 NamedCommands.registerCommand("Score LP2 Right",
                                 new DoScorePositionCommand(
-                                                elevatorSubsystem,
-                                                coralManipulatorSubsystem,
-                                                m_robotDrive,
-                                                2, // Level 2 scoring position
-                                                OIConstants.rightScoringOffset,
-                                                OIConstants.scoringDistanceRight,
-                                                CoralManipulatorConstants.levelTwoPivotPosition));
+                                        elevatorSubsystem,
+                                        coralManipulatorSubsystem,
+                                        m_robotDrive,
+                                        2,
+                                        CoralManipulatorConstants.levelTwoPivotPosition,
+                                        VisionConstants.FRONT_LEFT_CAMERA));
 
                 // Register Score LP3 Right
                 NamedCommands.registerCommand("Score LP3 Right",
                                 new DoScorePositionCommand(
-                                                elevatorSubsystem,
-                                                coralManipulatorSubsystem,
-                                                m_robotDrive,
-                                                3, // Level 3 scoring position
-                                                OIConstants.rightScoringOffset,
-                                                OIConstants.scoringDistanceRight,
-                                                CoralManipulatorConstants.levelThreePivotPosition));
+                                        elevatorSubsystem,
+                                        coralManipulatorSubsystem,
+                                        m_robotDrive,
+                                        3,
+                                        CoralManipulatorConstants.levelThreePivotPosition,
+                                        VisionConstants.FRONT_LEFT_CAMERA));
                 // Register Intake Coral Station
                 NamedCommands.registerCommand("Intake Coral Station",
                                 new DoIntakeCoralFromStationCommand(
@@ -409,9 +407,8 @@ public class RobotContainer {
                                                                                 coralManipulatorSubsystem,
                                                                                 m_robotDrive,
                                                                                 2,
-                                                                                OIConstants.rightScoringOffset,
-                                                                                OIConstants.scoringDistanceRight,
-                                                                                CoralManipulatorConstants.levelTwoPivotPosition)
+                                                                                CoralManipulatorConstants.levelTwoPivotPosition,
+                                                                                VisionConstants.FRONT_LEFT_CAMERA)
                                                                                 .schedule();
                                                         } else if (activeMode.manual()) {
                                                                 elevatorSubsystem.moveToScoringPosition(SP.two);
@@ -426,9 +423,8 @@ public class RobotContainer {
                                                                                 coralManipulatorSubsystem,
                                                                                 m_robotDrive,
                                                                                 3,
-                                                                                OIConstants.rightScoringOffset,
-                                                                                OIConstants.scoringDistanceRight,
-                                                                                CoralManipulatorConstants.levelThreePivotPosition)
+                                                                                CoralManipulatorConstants.levelThreePivotPosition,
+                                                                                VisionConstants.FRONT_LEFT_CAMERA)
                                                                                 .schedule();
                                                         } else if (activeMode.manual()) {
                                                                 elevatorSubsystem.moveToScoringPosition(SP.three);
@@ -457,15 +453,9 @@ public class RobotContainer {
                                                 // on Double Press - Coral mode: after down press: score L1
                                                 if (operatorLatestPOVButton == POV.Down) {
                                                         if (activeMode.semiAuto()) {
-                                                                new DoScorePositionCommand(
-                                                                                elevatorSubsystem,
-                                                                                coralManipulatorSubsystem,
-                                                                                m_robotDrive,
-                                                                                1,
-                                                                                0.0,
-                                                                                OIConstants.scoringDistanceRight,
-                                                                                CoralManipulatorConstants.levelOnePivotPosition)
-                                                                                .schedule();
+                                                                elevatorSubsystem.moveToScoringPosition(SP.one);
+                                                                coralManipulatorSubsystem.movePivotTo(
+                                                                                CoralManipulatorConstants.levelOnePivotPosition);
                                                         } else if (activeMode.manual()) {
                                                                 elevatorSubsystem.moveToScoringPosition(SP.one);
                                                                 coralManipulatorSubsystem.movePivotTo(
@@ -500,9 +490,8 @@ public class RobotContainer {
                                                                                 coralManipulatorSubsystem,
                                                                                 m_robotDrive,
                                                                                 2,
-                                                                                OIConstants.leftScoringOffset,
-                                                                                OIConstants.scoringDistanceLeft,
-                                                                                CoralManipulatorConstants.levelTwoPivotPosition)
+                                                                                CoralManipulatorConstants.levelTwoPivotPosition,
+                                                                                VisionConstants.FRONT_RIGHT_CAMERA)
                                                                                 .schedule();
                                                         } else if (activeMode.manual()) {
                                                                 elevatorSubsystem.moveToScoringPosition(SP.two);
@@ -517,9 +506,8 @@ public class RobotContainer {
                                                                                 coralManipulatorSubsystem,
                                                                                 m_robotDrive,
                                                                                 3,
-                                                                                OIConstants.leftScoringOffset,
-                                                                                OIConstants.scoringDistanceLeft,
-                                                                                CoralManipulatorConstants.levelThreePivotPosition)
+                                                                                CoralManipulatorConstants.levelThreePivotPosition,
+                                                                                VisionConstants.FRONT_RIGHT_CAMERA)
                                                                                 .schedule();
                                                         } else if (activeMode.manual()) {
                                                                 elevatorSubsystem.moveToScoringPosition(SP.three);
