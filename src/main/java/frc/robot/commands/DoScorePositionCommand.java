@@ -50,8 +50,8 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                                 new MoveElevator(elevator, scoringPosition),
                                 // new StrafeToAlignCommand(drive, desiredLateralOffset),
                                 Commands.either(
-                                    new ApproachTagCommand(drive, desiredDistance, 0, 0, aligningCamera), 
-                                    new ApproachTagCommand(drive, desiredDistance, 0, 0, aligningCamera).withTimeout(2),
+                                    new ApproachReefCommand(drive, desiredDistance, 0, 0, aligningCamera), 
+                                    new ApproachReefCommand(drive, desiredDistance, 0, 0, aligningCamera).withTimeout(2),
                                     () -> !DriverStation.isAutonomous()),
                                 new WaitCommand(0.1),
                                 new WaitUntilCommand(() -> elevator.atHeight()).withTimeout(1.75),

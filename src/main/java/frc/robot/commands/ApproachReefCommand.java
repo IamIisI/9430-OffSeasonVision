@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class ApproachTagCommand extends Command {
+public class ApproachReefCommand extends Command {
     private final DriveSubsystem drive;
     private final double desiredDistance;
     private final PIDController distanceController;
@@ -31,7 +31,7 @@ public class ApproachTagCommand extends Command {
     // Camera selection for both intake and non-intake modes.
     private PhotonCamera selectedCamera = null; // Default to no specific camera
 
-    public ApproachTagCommand(DriveSubsystem drive, double desiredDistance, double desiredOffset, double angle, PhotonCamera aligningCamera) {
+    public ApproachReefCommand(DriveSubsystem drive, double desiredDistance, double desiredOffset, double angle, PhotonCamera aligningCamera) {
         this.drive = drive;
         this.desiredDistance = desiredDistance;
         this.desiredLateralOffset = desiredOffset;
