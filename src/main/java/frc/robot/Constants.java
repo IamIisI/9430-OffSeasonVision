@@ -159,7 +159,7 @@ public final class Constants {
     public static final double STATION_LAT_TO_RIGHT = -0.04;
 
     public static final double STATION_DIST_TO_LEFT = 1.52;
-    public static final double STATION_LAT_TO_LEFT = -0.04;
+    public static final double STATION_LAT_TO_LEFT = 0.04;
   }
 
   public static final class NeoMotorConstants {
