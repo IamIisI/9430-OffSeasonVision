@@ -14,6 +14,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.CoralManipulatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CoralManipulatorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -28,10 +29,10 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
         public DoIntakeCoralFromStationCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
                         DriveSubsystem drive) {
                 this.drive = drive;
-                this.desiredLateralOffset = (drive.getPoseEstimatorSubsystem().getLastDetectionCameraIndex() == 1)
+                this.desiredLateralOffset = (drive.getPoseEstimatorSubsystem().getLastDetectionCamera().equals(VisionConstants.FRONT_RIGHT_CAMERA))
                                 ? OIConstants.intakePositionLeft
                                 : OIConstants.intakePositionRight;
-                this.desiredDistance = (drive.getPoseEstimatorSubsystem().getLastDetectionCameraIndex() == 1)
+                this.desiredDistance = (drive.getPoseEstimatorSubsystem().getLastDetectionCamera().equals(VisionConstants.FRONT_RIGHT_CAMERA))
                                 ? OIConstants.rightCoralIntakeDistance
                                 : OIConstants.leftCoralIntakeDistance;
 
@@ -77,8 +78,8 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
         }
 
         private boolean hasTag() {
-                int detectedTagRight = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(1);
-                int detectedTagLeft = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(2);
+                int detectedTagRight = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(VisionConstants.BACK_RIGHT_CAMERA);
+                int detectedTagLeft = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(VisionConstants.BACK_LEFT_CAMERA);
                 List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.intakeStationAprilTags)
                                 .boxed()
                                 .toList();
