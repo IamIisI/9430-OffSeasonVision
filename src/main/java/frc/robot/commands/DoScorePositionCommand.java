@@ -26,13 +26,12 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
     private final double desiredLateralOffset;
     private final double desiredDistance;
 
-    @SuppressWarnings("unlikely-arg-type")
+
     public DoScorePositionCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
-            DriveSubsystem drive, int scoringPosition, double desiredLateralOffset, double desiredDistance,
-            double pivotHeight) {
+            DriveSubsystem drive, int scoringPosition, double pivotHeight, PhotonCamera aligningCamera) {
         this.drive = drive;
-        this.desiredLateralOffset = desiredLateralOffset;
-        this.desiredDistance = desiredDistance;
+        this.desiredLateralOffset = 0;
+        this.desiredDistance = 0.365;
 
         System.out.printf("ElevatorCommand created - Target lateral offset: %.2f m, Target distance: %.2f m%n",
                 desiredLateralOffset, desiredDistance);
@@ -52,9 +51,10 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                                 new MoveElevator(elevator, scoringPosition),
                                 // new StrafeToAlignCommand(drive, desiredLateralOffset),
                                 Commands.either(
-                                    new ApproachTagCommand(drive, desiredDistance, desiredLateralOffset, false), 
-                                    new ApproachTagCommand(drive, desiredDistance, desiredLateralOffset, false).withTimeout(2),
+                                    new ApproachTagCommand(drive, desiredDistance, 0, 0, aligningCamera), 
+                                    new ApproachTagCommand(drive, desiredDistance, 0, 0, aligningCamera).withTimeout(2),
                                     () -> !DriverStation.isAutonomous()),
+                                new WaitCommand(0.1),
                                 new WaitUntilCommand(() -> elevator.atHeight()).withTimeout(1.75),
                                 // Eject if tag is seen, else rumble
                                 Commands.either(
@@ -71,7 +71,7 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                                                 RobotContainer.c_operatorController.getHID(), 0.2, 1);
                                         }), 
 
-                                    () -> (hasTag() && elevator.atHeight()) || DriverStation.isAutonomous()),
+                                    () -> (hasCameraDetectedTag(aligningCamera) && elevator.atHeight()) || DriverStation.isAutonomous()),
 
                                 new TransitModeCommand(elevator, coralSubsystem)),
                         // If we don't see a tag, do nothing
@@ -82,7 +82,7 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                             ControllerUtils.Rumble(
                                     RobotContainer.c_operatorController.getHID(), 0.2, 1);
                             }),
-                        () -> hasTag()));
+                        () -> hasCameraDetectedTag(aligningCamera)));
 
 
     }
@@ -106,6 +106,34 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                 .toList();
         return scoringTagsList.contains(detectedTag)
                 && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
+    }
+
+    private boolean hasRightCameraDetection() {
+        PhotonCamera selectedCameraIndex = VisionConstants.FRONT_RIGHT_CAMERA;  // Front camera for left-side approach
+        
+        int detectedTag = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(selectedCameraIndex);
+        List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.scoringAprilTags)
+                .boxed()
+                .toList();
+        return scoringTagsList.contains(detectedTag)
+                && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
+    }
+
+    private boolean hasLeftCameraDetection() {
+        PhotonCamera selectedCameraIndex = VisionConstants.FRONT_LEFT_CAMERA;  // Front camera for right-side approach
+            
+        int detectedTag = drive.getPoseEstimatorSubsystem().getLastTagDetectedByCamera(selectedCameraIndex);
+        List<Integer> scoringTagsList = Arrays.stream(AprilTagConstants.scoringAprilTags)
+                .boxed()
+                .toList();
+        return scoringTagsList.contains(detectedTag)
+                && drive.getPoseEstimatorSubsystem().hasCameraDetectedTag(selectedCameraIndex);
+    }
+
+    private boolean hasCameraDetectedTag(PhotonCamera camera) {
+        return ((camera.getName().equals(VisionConstants.FR_CAMERA_NAME)) 
+                ? hasRightCameraDetection() 
+                : hasLeftCameraDetection());
     }
     
 }
