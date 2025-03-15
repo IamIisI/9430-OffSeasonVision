@@ -54,7 +54,6 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
                                         new InstantCommand(() -> {
                                                 this.drive.drive(0, 0, 0, false);
                                         }),
-                                        // new StrafeToAlignCommand(drive, desiredLateralOffset, true).withTimeout(1.5),
                                         new MoveElevator(elevator, 0),
                                         new PivotCoral(coralSubsystem,
                                                         CoralManipulatorConstants.intakePivotPosition),
