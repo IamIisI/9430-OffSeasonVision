@@ -154,8 +154,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
           FL_translation.getMeasureX().in(Meter),
           FL_rotation.getMeasureZ().in(Degree),
           FL_translation.getMeasureY().in(Meter),
-          FL_translation.getX(),
-          FL_translation.getY(),
+          FL_cameraToTarget.getTranslation().getX(),
+          FL_cameraToTarget.getTranslation().getY(),
           FL_rotation.getMeasureZ().in(Degree),
           VisionConstants.FRONT_LEFT_CAMERA);
 
@@ -181,8 +181,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
           FR_translation.getMeasureX().in(Meter),
           FR_rotation.getMeasureZ().in(Degree),
           FR_translation.getMeasureY().in(Meter),
-          FR_translation.getX(),
-          FR_translation.getY(),
+          FR_cameraToTarget.getTranslation().getX(),
+          FR_cameraToTarget.getTranslation().getY(),
           FR_rotation.getMeasureZ().in(Degree),
           VisionConstants.FRONT_RIGHT_CAMERA);
 
@@ -207,8 +207,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
           BL_translation.getMeasureX().in(Meter),
           BL_rotation.getMeasureZ().in(Degree),
           BL_translation.getMeasureY().in(Meter),
-          BL_translation.getX(),
-          BL_translation.getY(),
+          BL_cameraToTarget.getTranslation().getX(),
+          BL_cameraToTarget.getTranslation().getY(),
           BL_rotation.getMeasureZ().in(Degree),
           VisionConstants.BACK_LEFT_CAMERA);
 
@@ -234,8 +234,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
           BR_translation.getMeasureX().in(Meter),
           BR_rotation.getMeasureZ().in(Degree),
           BR_translation.getMeasureY().in(Meter),
-          BR_translation.getX(),
-          BR_translation.getY(),
+          BR_cameraToTarget.getTranslation().getX(),
+          BR_cameraToTarget.getTranslation().getY(),
           BR_rotation.getMeasureZ().in(Degree),
           VisionConstants.BACK_RIGHT_CAMERA);
 
@@ -372,6 +372,26 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     public double getXOffsetToTag() {
         CameraDetection detection = getMostRecentDetection();
         return detection != null ? detection.xOffsetToTag : Double.NaN;
+    }
+
+    public double getXOffsetToTag(PhotonCamera camera) {
+        CameraDetection detection = getDetectionOf(camera);
+        return detection != null ? detection.xOffsetToTag : Double.NaN;
+    }
+
+    /**
+     * Gets the X offset to the tag from the most recent detection.
+     * 
+     * @return The X offset in meters.
+     */
+    public double getYOffsetToTag() {
+        CameraDetection detection = getMostRecentDetection();
+        return detection != null ? detection.yOffsetToTag : Double.NaN;
+    }
+
+    public double getYOffsetToTag(PhotonCamera camera) {
+        CameraDetection detection = getDetectionOf(camera);
+        return detection != null ? detection.yOffsetToTag : Double.NaN;
     }
 
     public Pose2d getEstimatedPose() {
