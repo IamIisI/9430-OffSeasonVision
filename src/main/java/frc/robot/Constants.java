@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.math.geometry.Rotation3d;
