@@ -30,8 +30,8 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
         public DoIntakeCoralFromStationCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
                         DriveSubsystem drive) {
                 this.drive = drive;
-                this.aligningCamera = (hasRightCameraDetection())? VisionConstants.BACK_RIGHT_CAMERA 
-                                    : (hasLeftCameraDetection())? VisionConstants.BACK_LEFT_CAMERA : null;
+                this.aligningCamera = (hasLeftCameraDetection())? VisionConstants.BACK_LEFT_CAMERA 
+                                    : (hasRightCameraDetection())? VisionConstants.BACK_RIGHT_CAMERA : null;
 
                 if (aligningCamera.getName().equals(VisionConstants.BL_CAMERA_NAME)) {
                         this.desiredLateralOffset = -0.04;
