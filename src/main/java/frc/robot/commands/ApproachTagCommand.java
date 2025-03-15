@@ -11,14 +11,15 @@ import frc.robot.subsystems.DriveSubsystem;
 public class ApproachTagCommand extends Command {
     private final DriveSubsystem drive;
     private final double desiredDistance;
+    private final double desiredAngle;
     private final PIDController distanceController;
     private final PIDController lateralController;
     private final PIDController rotationController;
 
     // Tolerances and speed limits
-    private static final double DISTANCE_TOLERANCE_METERS = 0.015; // 1.5cm tolerance (example)
+    private static final double DISTANCE_TOLERANCE_METERS = 0.02; // 1.5cm tolerance (example)
     private static final double LATERAL_TOLERANCE_METERS = 0.015; // 1.5cm
-    private static final double ROTATION_TOLERANCE_DEG = 5.0; // degrees tolerance
+    private static final double ROTATION_TOLERANCE_DEG = 2.5; // degrees tolerance
     private static final double MAX_FORWARD_SPEED = 1.5; // m/s
     private static final double MAX_LATERAL_SPEED = 1.0; // m/s
     private static final double MAX_ROTATION_SPEED = 0.5; // rad/s
@@ -32,25 +33,26 @@ public class ApproachTagCommand extends Command {
     // Camera selection for both intake and non-intake modes.
     private PhotonCamera selectedCamera = null; // Default to no specific camera
 
-    public ApproachTagCommand(DriveSubsystem drive, double desiredDistance, double desiredLateralOffset,
-            boolean isIntake) {
+    public ApproachTagCommand(DriveSubsystem drive, double desiredDistance, double desiredOffset, double angle, PhotonCamera aligningCamera) {
         this.drive = drive;
         this.desiredDistance = desiredDistance;
-        this.desiredLateralOffset = desiredLateralOffset;
-        this.isIntake = isIntake;
+        this.desiredLateralOffset = desiredOffset;
+        this.desiredAngle = angle;
+        this.isIntake = false;
+        this.selectedCamera = aligningCamera;
         addRequirements(drive);
 
         // PID for forward (distance) control
         distanceController = new PIDController(3.0, 0.0, 0.00);
-        distanceController.setTolerance(DISTANCE_TOLERANCE_METERS);
+        distanceController.setTolerance(0.0);
 
         // PID for lateral offset correction
         lateralController = new PIDController(3.0, 0.0, 0.05);
-        lateralController.setTolerance(LATERAL_TOLERANCE_METERS);
+        lateralController.setTolerance(0.0);
 
         // PID for rotation to face the desired offset position
         rotationController = new PIDController(0.1, 0.005, 0.005);
-        rotationController.setTolerance(ROTATION_TOLERANCE_DEG);
+        rotationController.setTolerance(0.0);
         rotationController.enableContinuousInput(-180, 180); // angle wrap-around
     }
 
@@ -59,33 +61,6 @@ public class ApproachTagCommand extends Command {
         distanceController.reset();
         lateralController.reset();
         rotationController.reset();
-
-        // Select the camera based on mode and desired lateral offset
-        if (isIntake) {
-            // In intake mode: use the dedicated intake camera selection.
-            // Positive offset means target is to the right so use left intake camera.
-            if (desiredLateralOffset > 0) {
-                selectedCamera = VisionConstants.BACK_LEFT_CAMERA;
-                System.out.println(
-                        "Intake mode: Using left camera (index " + VisionConstants.BACK_LEFT_CAMERA.getName() + ") for right-side approach");
-            } else {
-                selectedCamera = VisionConstants.BACK_RIGHT_CAMERA;
-                System.out.println(
-                        "Intake mode: Using right camera (index " + VisionConstants.BACK_RIGHT_CAMERA.getName() + ") for left-side approach");
-            }
-        } else {
-            // In non-intake mode: if there is a lateral offset, use a front camera.
-            if (desiredLateralOffset > 0) {
-                selectedCamera = VisionConstants.FRONT_LEFT_CAMERA; // Front camera for right-side approach
-                System.out.println("Non-intake mode: Using front camera index 0 for right-side approach");
-            } else if (desiredLateralOffset < 0) {
-                selectedCamera = VisionConstants.FRONT_RIGHT_CAMERA; // Front camera for left-side approach
-                System.out.println("Non-intake mode: Using front camera index 3 for left-side approach");
-            } else {
-                selectedCamera = null; // No specific camera selected; use any available detection
-                System.out.println("Non-intake mode: No lateral offset specified, using any available camera");
-            }
-        }
 
         System.out.printf(
                 "ApproachTagCommand initialized - Target distance: %.2f m, Lateral offset: %.2f m, Intake mode: %b%n",
@@ -117,8 +92,8 @@ public class ApproachTagCommand extends Command {
         }
 
         if (validTagDetection) {
-            double currentDistance = poseEstimator.getDistanceToTag(selectedCamera);
-            double currentLateralOffset = poseEstimator.getLateralOffsetToTag(selectedCamera);
+            double currentDistance = poseEstimator.getXOffsetToTag(selectedCamera);
+            double currentLateralOffset = poseEstimator.getYOffsetToTag(selectedCamera);
             double currentRotation = poseEstimator.getBearingToTagDeg(selectedCamera);
 
             // Compute corrections using PID controllers
@@ -153,23 +128,23 @@ public class ApproachTagCommand extends Command {
         double currentDistance = 0;
         double currentLateralOffset = 0;
         double currentRotation = 0;
-
+    
         if (selectedCamera != null) {
             int detectedTag = poseEstimator.getLastTagDetectedByCamera(selectedCamera);
             double lastDetectionTime = poseEstimator.getLastCameraDetectionTimestamp(selectedCamera);
 
             if (detectedTag != -1 && (currentTime - lastDetectionTime) < LOST_TAG_TIMEOUT) {
                 validTagDetection = true;
-                currentDistance = poseEstimator.getDistanceToTag(selectedCamera);
-                currentLateralOffset = poseEstimator.getLateralOffsetToTag(selectedCamera);
-                currentRotation = poseEstimator.getTagOrientationErrorDeg(selectedCamera);
+                currentDistance = poseEstimator.getXOffsetToTag(selectedCamera);
+                currentLateralOffset = poseEstimator.getYOffsetToTag(selectedCamera);
+                currentRotation = poseEstimator.getBearingToTagDeg(selectedCamera);
             }
         } else {
             if (poseEstimator.getLastDetectedTagId() != -1) {
                 validTagDetection = true;
                 currentDistance = poseEstimator.getDistanceToTag(selectedCamera);
                 currentLateralOffset = poseEstimator.getLateralOffsetToTag(selectedCamera);
-                currentRotation = poseEstimator.getTagOrientationErrorDeg(selectedCamera);
+                currentRotation = poseEstimator.getBearingToTagDeg(selectedCamera);
             }
         }
 
@@ -182,6 +157,7 @@ public class ApproachTagCommand extends Command {
 
             return distanceOk && lateralOk && rotationOk;
         }
+        
 
         return false;
     }
