@@ -23,13 +23,11 @@ import frc.utils.ControllerUtils;
 
 public class DoScorePositionCommand extends SequentialCommandGroup {
     private final DriveSubsystem drive;
-    private final double desiredDistance;
 
 
     public DoScorePositionCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
             DriveSubsystem drive, int scoringPosition, double pivotHeight, PhotonCamera aligningCamera) {
         this.drive = drive;
-        this.desiredDistance = ReefConstants.REEF_SCORING_DIST;
         
         addRequirements(drive, elevator);
 
@@ -44,8 +42,8 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                                 new PivotCoral(coralSubsystem, pivotHeight),
                                 new MoveElevator(elevator, scoringPosition),
                                 Commands.either(
-                                    new ApproachReefCommand(drive, desiredDistance, aligningCamera), 
-                                    new ApproachReefCommand(drive, desiredDistance, aligningCamera).withTimeout(2),
+                                    new ApproachReefCommand(drive, ReefConstants.REEF_SCORING_DIST, aligningCamera), 
+                                    new ApproachReefCommand(drive, ReefConstants.REEF_SCORING_DIST, aligningCamera).withTimeout(2),
                                     () -> !DriverStation.isAutonomous()),
                                 new WaitCommand(0.1),
                                 new WaitUntilCommand(() -> elevator.atHeight()).withTimeout(1.75),
