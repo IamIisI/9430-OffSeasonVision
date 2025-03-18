@@ -152,15 +152,36 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
-  public static final class AlignmentConstants {
+  public static final class ReefConstants {
     public static final double REEF_SCORING_DIST = 0.365;
 
+    // Tolerances and speed limits
+    public static final double DISTANCE_TOLERANCE_METERS = 0.02; // 1.5cm tolerance (example)
+    public static final double LATERAL_TOLERANCE_METERS = 0.015; // 1.5cm
+    public static final double ROTATION_TOLERANCE_DEG = 2.5; // degrees tolerance
+    public static final double MAX_FORWARD_SPEED = 1.5; // m/s
+    public static final double MAX_LATERAL_SPEED = 1.0; // m/s
+    public static final double MAX_ROTATION_SPEED = 0.5; // rad/s
+    public static final double LOST_TAG_TIMEOUT = 0.5; // seconds
+  }
+
+  public static final class IntakeStationConstants {
     public static final double STATION_DIST_TO_RIGHT = 1.52;
     public static final double STATION_LAT_TO_RIGHT = -0.04;
 
     public static final double STATION_DIST_TO_LEFT = 1.52;
     public static final double STATION_LAT_TO_LEFT = 0.04;
+    
+    // Tolerances and speed limits
+    public static final double DISTANCE_TOLERANCE_METERS = 0.01; // 1cm tolerance
+    public static final double LATERAL_TOLERANCE_METERS = 0.015; // 1.5cm
+    public static final double ROTATION_TOLERANCE_DEG = 1.0; // degrees tolerance
+    public static final double MAX_FORWARD_SPEED = 1.5; // m/s
+    public static final double MAX_LATERAL_SPEED = 1.0; // m/s
+    public static final double MAX_ROTATION_SPEED = 0.5; // rad/s
+    public static final double LOST_TAG_TIMEOUT = 0.5; // seconds
   }
+
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
