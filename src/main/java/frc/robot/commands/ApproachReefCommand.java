@@ -5,6 +5,7 @@ import org.photonvision.PhotonCamera;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ReefConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class ApproachReefCommand extends Command {
@@ -14,28 +15,15 @@ public class ApproachReefCommand extends Command {
     private final PIDController lateralController;
     private final PIDController rotationController;
 
-    // Tolerances and speed limits
-    private static final double DISTANCE_TOLERANCE_METERS = 0.02; // 1.5cm tolerance (example)
-    private static final double LATERAL_TOLERANCE_METERS = 0.015; // 1.5cm
-    private static final double ROTATION_TOLERANCE_DEG = 2.5; // degrees tolerance
-    private static final double MAX_FORWARD_SPEED = 1.5; // m/s
-    private static final double MAX_LATERAL_SPEED = 1.0; // m/s
-    private static final double MAX_ROTATION_SPEED = 0.5; // rad/s
-    private static final double LOST_TAG_TIMEOUT = 0.5; // seconds
-
     private double lastTagTimestamp = 0;
     // Variables to lock in the initial lateral offset when the tag is first seens
-    private double desiredLateralOffset = 0;
-    private boolean isIntake = false;
 
     // Camera selection for both intake and non-intake modes.
     private PhotonCamera selectedCamera = null; // Default to no specific camera
 
-    public ApproachReefCommand(DriveSubsystem drive, double desiredDistance, double desiredOffset, double angle, PhotonCamera aligningCamera) {
+    public ApproachReefCommand(DriveSubsystem drive, double desiredDistance, PhotonCamera aligningCamera) {
         this.drive = drive;
         this.desiredDistance = desiredDistance;
-        this.desiredLateralOffset = desiredOffset;
-        this.isIntake = false;
         this.selectedCamera = aligningCamera;
         addRequirements(drive);
 
@@ -61,7 +49,7 @@ public class ApproachReefCommand extends Command {
 
         System.out.printf(
                 "ApproachTagCommand initialized - Target distance: %.2f m, Lateral offset: %.2f m, Intake mode: %b%n",
-                desiredDistance, desiredLateralOffset, isIntake);
+                desiredDistance);
     }
 
     @Override
@@ -76,7 +64,7 @@ public class ApproachReefCommand extends Command {
             double lastDetectionTime = poseEstimator.getLastCameraDetectionTimestamp(selectedCamera);
             double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 
-            if (detectedTag != -1 && (currentTime - lastDetectionTime) < LOST_TAG_TIMEOUT) {
+            if (detectedTag != -1 && (currentTime - lastDetectionTime) < ReefConstants.LOST_TAG_TIMEOUT) {
                 validTagDetection = true;
                 lastTagTimestamp = lastDetectionTime;
             }
@@ -95,13 +83,13 @@ public class ApproachReefCommand extends Command {
 
             // Compute corrections using PID controllers
             double forwardSpeed = -distanceController.calculate(currentDistance, desiredDistance);
-            double lateralSpeed = -lateralController.calculate(currentLateralOffset, desiredLateralOffset);
+            double lateralSpeed = -lateralController.calculate(currentLateralOffset, 0);
             double rotationSpeed = -rotationController.calculate(currentRotation, 180);
 
             // Clamp speeds to maximum limits
-            forwardSpeed = Math.min(Math.max(forwardSpeed, -MAX_FORWARD_SPEED), MAX_FORWARD_SPEED);
-            lateralSpeed = Math.min(Math.max(lateralSpeed, -MAX_LATERAL_SPEED), MAX_LATERAL_SPEED);
-            rotationSpeed = Math.min(Math.max(rotationSpeed, -MAX_ROTATION_SPEED), MAX_ROTATION_SPEED);
+            forwardSpeed = Math.min(Math.max(forwardSpeed, -ReefConstants.MAX_FORWARD_SPEED), ReefConstants.MAX_FORWARD_SPEED);
+            lateralSpeed = Math.min(Math.max(lateralSpeed, -ReefConstants.MAX_LATERAL_SPEED), ReefConstants.MAX_LATERAL_SPEED);
+            rotationSpeed = Math.min(Math.max(rotationSpeed, -ReefConstants.MAX_ROTATION_SPEED), ReefConstants.MAX_ROTATION_SPEED);
 
             // Drive the robot with computed speeds
             drive.driveRobotRelative(new ChassisSpeeds(forwardSpeed, lateralSpeed, rotationSpeed));
@@ -116,7 +104,7 @@ public class ApproachReefCommand extends Command {
         var poseEstimator = drive.getPoseEstimatorSubsystem();
         double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 
-        if (currentTime - lastTagTimestamp > LOST_TAG_TIMEOUT) {
+        if (currentTime - lastTagTimestamp > ReefConstants.LOST_TAG_TIMEOUT) {
             System.out.println("ApproachTagCommand timeout - tag lost");
             return true;
         }
@@ -130,7 +118,7 @@ public class ApproachReefCommand extends Command {
             int detectedTag = poseEstimator.getLastTagDetectedByCamera(selectedCamera);
             double lastDetectionTime = poseEstimator.getLastCameraDetectionTimestamp(selectedCamera);
 
-            if (detectedTag != -1 && (currentTime - lastDetectionTime) < LOST_TAG_TIMEOUT) {
+            if (detectedTag != -1 && (currentTime - lastDetectionTime) < ReefConstants.LOST_TAG_TIMEOUT) {
                 validTagDetection = true;
                 currentDistance = poseEstimator.getXOffsetToTag(selectedCamera);
                 currentLateralOffset = poseEstimator.getYOffsetToTag(selectedCamera);
@@ -147,10 +135,10 @@ public class ApproachReefCommand extends Command {
 
         if (validTagDetection) {
             // Check if the distance, lateral offset, and rotation are within tolerance.
-            boolean distanceOk = Math.abs(currentDistance - desiredDistance) < DISTANCE_TOLERANCE_METERS;
-            boolean lateralOk = Math.abs(currentLateralOffset - desiredLateralOffset) < LATERAL_TOLERANCE_METERS;
+            boolean distanceOk = Math.abs(currentDistance - desiredDistance) < ReefConstants.DISTANCE_TOLERANCE_METERS;
+            boolean lateralOk = Math.abs(currentLateralOffset) < ReefConstants.LATERAL_TOLERANCE_METERS;
             double rotationError = (currentRotation - 180);
-            boolean rotationOk = Math.abs(rotationError) < ROTATION_TOLERANCE_DEG;
+            boolean rotationOk = Math.abs(rotationError) < ReefConstants.ROTATION_TOLERANCE_DEG;
 
             return distanceOk && lateralOk && rotationOk;
         }
