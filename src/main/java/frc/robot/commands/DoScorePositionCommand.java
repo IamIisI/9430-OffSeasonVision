@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Constants.AlignmentConstants;
 import frc.robot.Constants.AprilTagConstants;
+import frc.robot.Constants.ReefConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.CoralManipulatorSubsystem;
@@ -29,7 +29,7 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
     public DoScorePositionCommand(ElevatorSubsystem elevator, CoralManipulatorSubsystem coralSubsystem,
             DriveSubsystem drive, int scoringPosition, double pivotHeight, PhotonCamera aligningCamera) {
         this.drive = drive;
-        this.desiredDistance = AlignmentConstants.REEF_SCORING_DIST;
+        this.desiredDistance = ReefConstants.REEF_SCORING_DIST;
         
         addRequirements(drive, elevator);
 
@@ -44,8 +44,8 @@ public class DoScorePositionCommand extends SequentialCommandGroup {
                                 new PivotCoral(coralSubsystem, pivotHeight),
                                 new MoveElevator(elevator, scoringPosition),
                                 Commands.either(
-                                    new ApproachReefCommand(drive, desiredDistance, 0, 0, aligningCamera), 
-                                    new ApproachReefCommand(drive, desiredDistance, 0, 0, aligningCamera).withTimeout(2),
+                                    new ApproachReefCommand(drive, desiredDistance, aligningCamera), 
+                                    new ApproachReefCommand(drive, desiredDistance, aligningCamera).withTimeout(2),
                                     () -> !DriverStation.isAutonomous()),
                                 new WaitCommand(0.1),
                                 new WaitUntilCommand(() -> elevator.atHeight()).withTimeout(1.75),

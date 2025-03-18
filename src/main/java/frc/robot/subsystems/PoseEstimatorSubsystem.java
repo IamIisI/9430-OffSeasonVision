@@ -188,6 +188,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         FRONT_RIGHT_DETECTION = FR_detection;
         logCameraDetection(FRONT_RIGHT_DETECTION);
+        
         /*
          * BACK LEFT CAMERA
          */
