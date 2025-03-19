@@ -137,7 +137,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         desiredHeight = ElevatorConstants.level3ScoringPosition;
         break;
       case 4:
-        desiredHeight = ElevatorConstants.minimumElevatorHeight + 0.001;
+        desiredHeight = ElevatorConstants.minimumElevatorHeight;
         break;
       case 5:
         desiredHeight = ElevatorConstants.maximumElevatorHeight;
@@ -264,6 +264,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
       autoSpeed = elevatorController.calculate(getHeight(), desiredHeight);
       setMotorSpeed(autoSpeed);
+
+      if (atHeight() && (desiredHeight < ElevatorConstants.minimumElevatorHeight + ElevatorConstants.positionTolerence)) {
+        turnOffAutoMode();
+      }
 
       // Log data
       SmartDashboard.putNumber("AutoSpeed", autoSpeed);

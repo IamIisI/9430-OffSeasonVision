@@ -6,9 +6,7 @@ package frc.utils;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -73,7 +71,10 @@ public class ControllerUtils {
             new WaitCommand(1), 
             new InstantCommand(() -> {
                 controller.setRumble(RumbleType.kBothRumble, 0);
-            })).handleInterrupt(() -> {controller.setRumble(RumbleType.kBothRumble, 0);}).schedule();
+            })).handleInterrupt(() -> {
+                controller.setRumble(RumbleType.kBothRumble, 0);
+            }
+        ).schedule();
     }
 
     public static void Rumble(XboxController controller, double time) {
@@ -84,7 +85,10 @@ public class ControllerUtils {
             new WaitCommand(time), 
             new InstantCommand(() -> {
                 controller.setRumble(RumbleType.kBothRumble, 0);
-            })).handleInterrupt(() -> {controller.setRumble(RumbleType.kBothRumble, 0);}).schedule();
+            })).handleInterrupt(() -> {
+                controller.setRumble(RumbleType.kBothRumble, 0);
+            }
+        ).schedule();
     }
 
     public static void Rumble(XboxController controller, double time, double intencity) {
@@ -95,7 +99,10 @@ public class ControllerUtils {
             new WaitCommand(time), 
             new InstantCommand(() -> {
                 controller.setRumble(RumbleType.kBothRumble, 0);
-            })).handleInterrupt(() -> {controller.setRumble(RumbleType.kBothRumble, 0);}).schedule();
+            })).handleInterrupt(() -> {
+                controller.setRumble(RumbleType.kBothRumble, 0);
+            }
+        ).schedule();
     }
 
 }

@@ -4,10 +4,12 @@
 
 package frc.robot;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import org.photonvision.PhotonCamera;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -75,6 +77,36 @@ public final class Constants {
 
   public static final class VisionConstants {
     public static final int[] kAlignApriltagIDs = new int[] { 6 };
+
+    public static final String FL_CAMERA_NAME = "Arducam_FL";
+    public static final String FR_CAMERA_NAME = "Arducam_FR";
+    public static final String BL_CAMERA_NAME = "Arducam_BL";
+    public static final String BR_CAMERA_NAME = "Arducam_BR";
+
+    public static final PhotonCamera FRONT_LEFT_CAMERA = new PhotonCamera(FL_CAMERA_NAME);
+    public static final PhotonCamera FRONT_RIGHT_CAMERA = new PhotonCamera(FR_CAMERA_NAME);
+    public static final PhotonCamera BACK_LEFT_CAMERA = new PhotonCamera(BL_CAMERA_NAME);
+    public static final PhotonCamera BACK_RIGHT_CAMERA = new PhotonCamera(BR_CAMERA_NAME);
+
+    public static final Transform3d FRONT_LEFT_CAMERA_LOCATION = 
+      new Transform3d(
+                    new Translation3d(0.288, 0.1397, 0.119),
+                    new Rotation3d(0.0, -0.2617, 0.0));
+
+    public static final Transform3d FRONT_RIGHT_CAMERA_LOCATION = 
+      new Transform3d(
+                    new Translation3d(0.288, -0.1397, 0.119),
+                    new Rotation3d(0.0, -0.2617, 0.0));
+
+    public static final Transform3d BACK_LEFT_CAMERA_LOCATION = 
+      new Transform3d(
+                    new Translation3d(-0.196, 0.26, 0.140),
+                    new Rotation3d(0, -1.16, 0.434));
+
+    public static final Transform3d BACK_RIGHT_CAMERA_LOCATION = 
+      new Transform3d(
+                    new Translation3d(-0.196, -0.26, 0.140),
+                    new Rotation3d(0, -1.16, -0.434));
   }
 
   public static final class ModuleConstants {
@@ -102,20 +134,6 @@ public final class Constants {
     public static final double kDriveDeadband = 0.08;
 
     public static final double kTriggerThreshold = 0.1;
-
-    public static final double scoringDistanceRight = 0.62;
-    public static final double scoringDistanceLeft = 0.65;
-
-    public static final double rightCoralIntakeDistance = 0.53;
-    public static final double leftCoralIntakeDistance = 0.48;
-
-    public static final double leftScoringOffset = -0.164;
-    public static final double rightScoringOffset = 0.165;
-
-    // TODO tune these offsets to align with the grooves on the intake station
-    public static final double intakePositionLeft = -0.74;
-    public static final double intakePositionRight = 0.54;
-
     public static final double doublePressBuffer = 0.5;
   }
 
@@ -134,6 +152,16 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
+  public static final class AlignmentConstants {
+    public static final double REEF_SCORING_DIST = 0.365;
+
+    public static final double STATION_DIST_TO_RIGHT = 1.52;
+    public static final double STATION_LAT_TO_RIGHT = -0.04;
+
+    public static final double STATION_DIST_TO_LEFT = 1.52;
+    public static final double STATION_LAT_TO_LEFT = 0.04;
+  }
+
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
@@ -143,19 +171,19 @@ public final class Constants {
     public static final int elevatorMotorCanId = 27;
 
     public static final double kP = 20;
-    public static final double kI = 0;
-    public static final double kD = 0.05;
+    public static final double kI = 0.0;
+    public static final double kD = 0.5;
 
     public static final double positionTolerence = 0.001;
 
 
-    public static final double minimumElevatorHeight = (newRobot)? 0.165 : 0.175; // Furthest possible is 0.164
+    public static final double minimumElevatorHeight = (newRobot)? 0.160 : 0.175; // Furthest possible is 0.159
     public static final double maximumElevatorHeight = (newRobot)? 0.975 : 0.675; // Furthest possible is 0.99
 
-    public static final double coralStationPosition = (newRobot)? 0.488 : 0.405; // Scoring position 0
+    public static final double coralStationPosition = (newRobot)? 0.497 : 0.405; // Scoring position 0
     public static final double level1ScoringPosition = (newRobot)? 0.411 : 0.32;
-    public static final double level2ScoringPosition = (newRobot)? 0.540 : 0.51;
-    public static final double level3ScoringPosition = (newRobot)? 0.790 : 0.669;
+    public static final double level2ScoringPosition = (newRobot)? 0.511 : 0.51;
+    public static final double level3ScoringPosition = (newRobot)? 0.777 : 0.669;
 
     public static final double lowAlgaeClear = 0.610;
     public static final double highAlgaeClear = 0.894;
@@ -175,11 +203,19 @@ public final class Constants {
     public static final int PivotMotorCanId = 42;
     public static final int IntakeMotorCanId = 41;
 
-    public static final double pivotKp = 2.25;
-    public static final double pivotKi = 0.5;
-    public static final double pivotKd = 0.11;
+    public static final double intakeKp = 2.5;
+    public static final double intakeKi = 0.5;
+    public static final double intakeKd = 0.05;
+  
+    public static final double scoringKp = 3.0;
+    public static final double scoringKi = 0.0;
+    public static final double scoringKd = 0.10;
+  
+    public static final double transitKp = 2.0;
+    public static final double transitKi = 0.75;
+    public static final double transitKd = 0.1;
 
-    public static final double maxPivotSpeed = 0.15;
+    public static final double maxPivotSpeed = 0.1;
 
     public static final double autoStopCurrent = 30;
 
