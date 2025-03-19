@@ -253,8 +253,7 @@ public final class Constants {
   
   public static final class ClimbingArmConstants {
 
-    public static final int motor1CanId = 51;
-    public static final int motor2CanId = 52;
+    public static final int motorCanId = 51;
     
   }
 
