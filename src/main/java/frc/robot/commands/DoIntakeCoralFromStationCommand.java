@@ -42,9 +42,6 @@ public class DoIntakeCoralFromStationCommand extends SequentialCommandGroup {
                 }
                 this.desiredAngle = 180;
 
-                System.out.printf("ElevatorCommand created - Target lateral offset: %.2f m, Target distance: %.2f m%n",
-                                desiredLateralOffset, desiredDistance);
-
                 addRequirements(drive, elevator, coralSubsystem);
 
                 addCommands(
