@@ -156,9 +156,9 @@ public final class Constants {
     public static final double REEF_SCORING_DIST = 0.365;
 
     // Tolerances and speed limits
-    public static final double DISTANCE_TOLERANCE_METERS = 0.02; // 1.5cm tolerance (example)
-    public static final double LATERAL_TOLERANCE_METERS = 0.015; // 1.5cm
-    public static final double ROTATION_TOLERANCE_DEG = 2.5; // degrees tolerance
+    public static final double DISTANCE_TOLERANCE_METERS = 0.02; // 2cm tolerance
+    public static final double LATERAL_TOLERANCE_METERS = 0.010; // 1cm
+    public static final double ROTATION_TOLERANCE_DEG = 1.5; // degrees tolerance
     public static final double MAX_FORWARD_SPEED = 1.5; // m/s
     public static final double MAX_LATERAL_SPEED = 1.0; // m/s
     public static final double MAX_ROTATION_SPEED = 0.5; // rad/s
@@ -195,7 +195,7 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.5;
 
-    public static final double positionTolerence = 0.001;
+    public static final double positionTolerence = 0.005;
 
 
     public static final double minimumElevatorHeight = (newRobot)? 0.160 : 0.175; // Furthest possible is 0.159
@@ -203,9 +203,8 @@ public final class Constants {
 
     public static final double coralStationPosition = (newRobot)? 0.502 : 0.405; // Scoring position 0
     public static final double level1ScoringPosition = (newRobot)? 0.411 : 0.32;
-    public static final double level2ScoringPosition = (newRobot)? 0.455
-     : 0.51;
-    public static final double level3ScoringPosition = (newRobot)? 0.730 : 0.669;
+    public static final double level2ScoringPosition = (newRobot)? 0.558 : 0.51;
+    public static final double level3ScoringPosition = (newRobot)? 0.805 : 0.669;
 
     public static final double lowAlgaeClear = 0.610;
     public static final double highAlgaeClear = 0.894;
@@ -245,10 +244,10 @@ public final class Constants {
     public static final double minimumPivotPosition = 0.095;
 
     public static final double intakePivotPosition = 0.314;
-    public static final double transitPivotPosition = 0.46;
+    public static final double transitPivotPosition = 0.455;
     public static final double levelOnePivotPosition = 0.3;
-    public static final double levelTwoPivotPosition = 0.24; // Motor Off: low hard limit
-    public static final double levelThreePivotPosition = 0.24;
+    public static final double levelTwoPivotPosition = 0.193; // Motor Off: low hard limit
+    public static final double levelThreePivotPosition = 0.193;
 
     public static final double clearPivotHeight = 0.191;
   }
