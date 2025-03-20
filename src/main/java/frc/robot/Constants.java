@@ -201,10 +201,11 @@ public final class Constants {
     public static final double minimumElevatorHeight = (newRobot)? 0.160 : 0.175; // Furthest possible is 0.159
     public static final double maximumElevatorHeight = (newRobot)? 0.975 : 0.675; // Furthest possible is 0.99
 
-    public static final double coralStationPosition = (newRobot)? 0.497 : 0.405; // Scoring position 0
+    public static final double coralStationPosition = (newRobot)? 0.502 : 0.405; // Scoring position 0
     public static final double level1ScoringPosition = (newRobot)? 0.411 : 0.32;
-    public static final double level2ScoringPosition = (newRobot)? 0.511 : 0.51;
-    public static final double level3ScoringPosition = (newRobot)? 0.777 : 0.669;
+    public static final double level2ScoringPosition = (newRobot)? 0.455
+     : 0.51;
+    public static final double level3ScoringPosition = (newRobot)? 0.730 : 0.669;
 
     public static final double lowAlgaeClear = 0.610;
     public static final double highAlgaeClear = 0.894;
@@ -243,7 +244,7 @@ public final class Constants {
     public static final double maximumPivotPosition = 0.48;
     public static final double minimumPivotPosition = 0.095;
 
-    public static final double intakePivotPosition = 0.375;
+    public static final double intakePivotPosition = 0.314;
     public static final double transitPivotPosition = 0.46;
     public static final double levelOnePivotPosition = 0.3;
     public static final double levelTwoPivotPosition = 0.24; // Motor Off: low hard limit
