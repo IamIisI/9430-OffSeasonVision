@@ -59,7 +59,7 @@ public class TransitModeCommand extends Command {
     if (elevator != null)
       elevator.moveToScoringPosition(SP.min); 
     if (coral != null)
-      coral.movePivotTo(CoralManipulatorConstants.maximumPivotPosition);
+      coral.movePivotTo(CoralManipulatorConstants.transitPivotPosition);
     if (algae != null)
       algae.setDesiredPivotHeight(AP.transit);
   }
