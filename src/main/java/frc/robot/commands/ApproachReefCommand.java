@@ -46,10 +46,6 @@ public class ApproachReefCommand extends Command {
         distanceController.reset();
         lateralController.reset();
         rotationController.reset();
-
-        System.out.printf(
-                "ApproachTagCommand initialized - Target distance: %.2f m, Lateral offset: %.2f m, Intake mode: %b%n",
-                desiredDistance);
     }
 
     @Override
