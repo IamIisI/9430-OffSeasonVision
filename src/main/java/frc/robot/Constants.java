@@ -159,8 +159,8 @@ public final class Constants {
     public static final double DISTANCE_TOLERANCE_METERS = 0.02; // 2cm tolerance
     public static final double LATERAL_TOLERANCE_METERS = 0.010; // 1cm
     public static final double ROTATION_TOLERANCE_DEG = 1.5; // degrees tolerance
-    public static final double MAX_FORWARD_SPEED = 1.5; // m/s
-    public static final double MAX_LATERAL_SPEED = 1.0; // m/s
+    public static final double MAX_FORWARD_SPEED = 2.0; // m/s
+    public static final double MAX_LATERAL_SPEED = 1.5; // m/s
     public static final double MAX_ROTATION_SPEED = 0.5; // rad/s
     public static final double LOST_TAG_TIMEOUT = 0.5; // seconds
   }
@@ -168,13 +168,15 @@ public final class Constants {
   public static final class IntakeStationConstants {
     public static final double STATION_DIST_TO_RIGHT = 1.52;
     public static final double STATION_LAT_TO_RIGHT = -0.04;
+    public static final double STATION_ROT_TO_RIGHT = 180;
 
     public static final double STATION_DIST_TO_LEFT = 1.52;
     public static final double STATION_LAT_TO_LEFT = 0.04;
+    public static final double STATION_ROT_TO_LEFT = 180;
     
     // Tolerances and speed limits
-    public static final double DISTANCE_TOLERANCE_METERS = 0.01; // 1cm tolerance
-    public static final double LATERAL_TOLERANCE_METERS = 0.015; // 1.5cm
+    public static final double DISTANCE_TOLERANCE_METERS = 0.02; // 1cm tolerance
+    public static final double LATERAL_TOLERANCE_METERS = 0.03; // 1.5cm
     public static final double ROTATION_TOLERANCE_DEG = 1.0; // degrees tolerance
     public static final double MAX_FORWARD_SPEED = 1.5; // m/s
     public static final double MAX_LATERAL_SPEED = 1.0; // m/s
@@ -201,9 +203,9 @@ public final class Constants {
     public static final double minimumElevatorHeight = (newRobot)? 0.160 : 0.175; // Furthest possible is 0.159
     public static final double maximumElevatorHeight = (newRobot)? 0.975 : 0.675; // Furthest possible is 0.99
 
-    public static final double coralStationPosition = (newRobot)? 0.502 : 0.405; // Scoring position 0
+    public static final double coralStationPosition = (newRobot)? 0.525 : 0.405; // Scoring position 0
     public static final double level1ScoringPosition = (newRobot)? 0.411 : 0.32;
-    public static final double level2ScoringPosition = (newRobot)? 0.558 : 0.51;
+    public static final double level2ScoringPosition = (newRobot)? 0.535 : 0.51;
     public static final double level3ScoringPosition = (newRobot)? 0.805 : 0.669;
 
     public static final double lowAlgaeClear = 0.610;

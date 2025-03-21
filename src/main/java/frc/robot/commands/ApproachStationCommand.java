@@ -82,7 +82,7 @@ public class ApproachStationCommand extends Command {
             // Compute corrections using PID controllers
             double forwardSpeed = -distanceController.calculate(currentDistance, desiredDistance);
             double lateralSpeed = -lateralController.calculate(currentLateralOffset, desiredLateralOffset);
-            double rotationSpeed = -rotationController.calculate(currentRotation, 180);
+            double rotationSpeed = -rotationController.calculate(currentRotation, IntakeStationConstants.STATION_ROT_TO_RIGHT);
 
             // Clamp speeds to maximum limits
             forwardSpeed = Math.min(Math.max(forwardSpeed, -IntakeStationConstants.MAX_FORWARD_SPEED), IntakeStationConstants.MAX_FORWARD_SPEED);
@@ -135,7 +135,7 @@ public class ApproachStationCommand extends Command {
             // Check if the distance, lateral offset, and rotation are within tolerance.
             boolean distanceOk = Math.abs(currentDistance - desiredDistance) < IntakeStationConstants.DISTANCE_TOLERANCE_METERS;
             boolean lateralOk = Math.abs(currentLateralOffset - desiredLateralOffset) < IntakeStationConstants.LATERAL_TOLERANCE_METERS;
-            double rotationError = (currentRotation - 180);
+            double rotationError = (currentRotation - IntakeStationConstants.STATION_ROT_TO_RIGHT);
             boolean rotationOk = Math.abs(rotationError) < IntakeStationConstants.ROTATION_TOLERANCE_DEG;
 
             return distanceOk && lateralOk && rotationOk;
