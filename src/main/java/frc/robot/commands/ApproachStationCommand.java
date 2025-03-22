@@ -5,6 +5,7 @@ import org.photonvision.PhotonCamera;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeStationConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class ApproachStationCommand extends Command {
@@ -13,15 +14,6 @@ public class ApproachStationCommand extends Command {
     private final PIDController distanceController;
     private final PIDController lateralController;
     private final PIDController rotationController;
-
-    // Tolerances and speed limits
-    private static final double DISTANCE_TOLERANCE_METERS = 0.01; // 1cm tolerance
-    private static final double LATERAL_TOLERANCE_METERS = 0.015; // 1.5cm
-    private static final double ROTATION_TOLERANCE_DEG = 1.0; // degrees tolerance
-    private static final double MAX_FORWARD_SPEED = 1.5; // m/s
-    private static final double MAX_LATERAL_SPEED = 1.0; // m/s
-    private static final double MAX_ROTATION_SPEED = 0.5; // rad/s
-    private static final double LOST_TAG_TIMEOUT = 0.5; // seconds
 
     private double lastTagTimestamp = 0;
     // Variables to lock in the initial lateral offset when the tag is first seens
@@ -70,7 +62,7 @@ public class ApproachStationCommand extends Command {
             double lastDetectionTime = poseEstimator.getLastCameraDetectionTimestamp(selectedCamera);
             double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 
-            if (detectedTag != -1 && (currentTime - lastDetectionTime) < LOST_TAG_TIMEOUT) {
+            if (detectedTag != -1 && (currentTime - lastDetectionTime) < IntakeStationConstants.LOST_TAG_TIMEOUT) {
                 validTagDetection = true;
                 lastTagTimestamp = lastDetectionTime;
             }
@@ -90,12 +82,12 @@ public class ApproachStationCommand extends Command {
             // Compute corrections using PID controllers
             double forwardSpeed = -distanceController.calculate(currentDistance, desiredDistance);
             double lateralSpeed = -lateralController.calculate(currentLateralOffset, desiredLateralOffset);
-            double rotationSpeed = -rotationController.calculate(currentRotation, 180);
+            double rotationSpeed = -rotationController.calculate(currentRotation, IntakeStationConstants.STATION_ROT_TO_RIGHT);
 
             // Clamp speeds to maximum limits
-            forwardSpeed = Math.min(Math.max(forwardSpeed, -MAX_FORWARD_SPEED), MAX_FORWARD_SPEED);
-            lateralSpeed = Math.min(Math.max(lateralSpeed, -MAX_LATERAL_SPEED), MAX_LATERAL_SPEED);
-            rotationSpeed = Math.min(Math.max(rotationSpeed, -MAX_ROTATION_SPEED), MAX_ROTATION_SPEED);
+            forwardSpeed = Math.min(Math.max(forwardSpeed, -IntakeStationConstants.MAX_FORWARD_SPEED), IntakeStationConstants.MAX_FORWARD_SPEED);
+            lateralSpeed = Math.min(Math.max(lateralSpeed, -IntakeStationConstants.MAX_LATERAL_SPEED), IntakeStationConstants.MAX_LATERAL_SPEED);
+            rotationSpeed = Math.min(Math.max(rotationSpeed, -IntakeStationConstants.MAX_ROTATION_SPEED), IntakeStationConstants.MAX_ROTATION_SPEED);
 
             // Drive the robot with computed speeds
             drive.driveRobotRelative(new ChassisSpeeds(forwardSpeed, lateralSpeed, rotationSpeed));
@@ -110,7 +102,7 @@ public class ApproachStationCommand extends Command {
         var poseEstimator = drive.getPoseEstimatorSubsystem();
         double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 
-        if (currentTime - lastTagTimestamp > LOST_TAG_TIMEOUT) {
+        if (currentTime - lastTagTimestamp > IntakeStationConstants.LOST_TAG_TIMEOUT) {
             System.out.println("ApproachTagCommand timeout - tag lost");
             return true;
         }
@@ -124,7 +116,7 @@ public class ApproachStationCommand extends Command {
             int detectedTag = poseEstimator.getLastTagDetectedByCamera(selectedCamera);
             double lastDetectionTime = poseEstimator.getLastCameraDetectionTimestamp(selectedCamera);
 
-            if (detectedTag != -1 && (currentTime - lastDetectionTime) < LOST_TAG_TIMEOUT) {
+            if (detectedTag != -1 && (currentTime - lastDetectionTime) < IntakeStationConstants.LOST_TAG_TIMEOUT) {
                 validTagDetection = true;
                 currentDistance = poseEstimator.getXOffsetToTag(selectedCamera);
                 currentLateralOffset = poseEstimator.getYOffsetToTag(selectedCamera);
@@ -141,10 +133,10 @@ public class ApproachStationCommand extends Command {
 
         if (validTagDetection) {
             // Check if the distance, lateral offset, and rotation are within tolerance.
-            boolean distanceOk = Math.abs(currentDistance - desiredDistance) < DISTANCE_TOLERANCE_METERS;
-            boolean lateralOk = Math.abs(currentLateralOffset - desiredLateralOffset) < LATERAL_TOLERANCE_METERS;
-            double rotationError = (currentRotation - 180);
-            boolean rotationOk = Math.abs(rotationError) < ROTATION_TOLERANCE_DEG;
+            boolean distanceOk = Math.abs(currentDistance - desiredDistance) < IntakeStationConstants.DISTANCE_TOLERANCE_METERS;
+            boolean lateralOk = Math.abs(currentLateralOffset - desiredLateralOffset) < IntakeStationConstants.LATERAL_TOLERANCE_METERS;
+            double rotationError = (currentRotation - IntakeStationConstants.STATION_ROT_TO_RIGHT);
+            boolean rotationOk = Math.abs(rotationError) < IntakeStationConstants.ROTATION_TOLERANCE_DEG;
 
             return distanceOk && lateralOk && rotationOk;
         }

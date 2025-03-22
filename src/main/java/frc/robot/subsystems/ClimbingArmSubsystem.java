@@ -11,8 +11,7 @@ import frc.robot.Constants.ClimbingArmConstants;
 
 public class ClimbingArmSubsystem extends SubsystemBase {
 
-  private SparkFlex motor1 = new SparkFlex(ClimbingArmConstants.motor1CanId, MotorType.kBrushless);
-  private SparkFlex motor2 = new SparkFlex(ClimbingArmConstants.motor2CanId, MotorType.kBrushless);
+  private SparkFlex motor = new SparkFlex(ClimbingArmConstants.motorCanId, MotorType.kBrushless);
 
   /** Creates a new ClimbingArmSubsystem. */
   public ClimbingArmSubsystem() {}
@@ -23,16 +22,14 @@ public class ClimbingArmSubsystem extends SubsystemBase {
    * @param speed the speed of the motors
    */
   public void setMotorSpeeds(double speed) {
-    motor1.set(speed);
-    motor2.set(speed);
+    motor.set(speed);
   }
 
   /**
    * Stops the climbing arm
    */
   public void stopMotors() {
-    motor1.stopMotor();
-    motor2.stopMotor();
+    motor.stopMotor();
   }
 
   @Override

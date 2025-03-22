@@ -47,10 +47,6 @@ public class RotateToTagCommand extends Command {
             // Clamp rotation speed
             rotationSpeed = Math.min(Math.max(rotationSpeed, -MAX_ROTATION_SPEED), MAX_ROTATION_SPEED);
             
-            // Log the current state
-            System.out.printf("Rotation - Bearing: %.2f°, RotationSpeed: %.2f rad/s%n", 
-                bearing, rotationSpeed);
-            
             // Apply rotation
             drive.driveRobotRelative(new ChassisSpeeds(0, 0, rotationSpeed));
         } else {

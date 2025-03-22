@@ -335,7 +335,7 @@ public class CoralManipulatorSubsystem extends SubsystemBase {
       Math.max(
         -((desiredPivotPosition == CoralManipulatorConstants.intakePivotPosition)
           ? pivotController 
-          : (desiredPivotPosition == CoralManipulatorConstants.maximumPivotPosition)
+          : (desiredPivotPosition == CoralManipulatorConstants.transitPivotPosition)
           ? transitController 
           : scoringController)
             .calculate(getPivotMotorPosition(), desiredPivotPosition), 
