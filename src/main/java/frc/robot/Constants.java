@@ -28,10 +28,6 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
-  // Easy value to change between the limits
-  private static final boolean newRobot = true;
-
-
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -152,133 +148,8 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
-  public static final class ReefConstants {
-    public static final double REEF_SCORING_DIST = 0.365;
-
-    // Tolerances and speed limits
-    public static final double DISTANCE_TOLERANCE_METERS = 0.02; // 2cm tolerance
-    public static final double LATERAL_TOLERANCE_METERS = 0.010; // 1cm
-    public static final double ROTATION_TOLERANCE_DEG = 1.5; // degrees tolerance
-    public static final double MAX_FORWARD_SPEED = 2.0; // m/s
-    public static final double MAX_LATERAL_SPEED = 1.5; // m/s
-    public static final double MAX_ROTATION_SPEED = 0.5; // rad/s
-    public static final double LOST_TAG_TIMEOUT = 0.5; // seconds
-  }
-
-  public static final class IntakeStationConstants {
-    public static final double STATION_DIST_TO_RIGHT = 1.52;
-    public static final double STATION_LAT_TO_RIGHT = -0.04;
-    public static final double STATION_ROT_TO_RIGHT = 180;
-
-    public static final double STATION_DIST_TO_LEFT = 1.52;
-    public static final double STATION_LAT_TO_LEFT = 0.04;
-    public static final double STATION_ROT_TO_LEFT = 180;
-    
-    // Tolerances and speed limits
-    public static final double DISTANCE_TOLERANCE_METERS = 0.02; // 1cm tolerance
-    public static final double LATERAL_TOLERANCE_METERS = 0.03; // 1.5cm
-    public static final double ROTATION_TOLERANCE_DEG = 1.0; // degrees tolerance
-    public static final double MAX_FORWARD_SPEED = 1.5; // m/s
-    public static final double MAX_LATERAL_SPEED = 1.0; // m/s
-    public static final double MAX_ROTATION_SPEED = 0.5; // rad/s
-    public static final double LOST_TAG_TIMEOUT = 0.5; // seconds
-  }
-
-
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
-  }
-
-  public static final class ElevatorConstants {
-
-    public static final int elevatorMotorCanId = 27;
-
-    public static final double kP = 20;
-    public static final double kI = 0.0;
-    public static final double kD = 0.5;
-
-    public static final double positionTolerence = 0.005;
-
-
-    public static final double minimumElevatorHeight = (newRobot)? 0.160 : 0.175; // Furthest possible is 0.159
-    public static final double maximumElevatorHeight = (newRobot)? 0.975 : 0.675; // Furthest possible is 0.99
-
-    public static final double coralStationPosition = (newRobot)? 0.525 : 0.405; // Scoring position 0
-    public static final double level1ScoringPosition = (newRobot)? 0.411 : 0.32;
-    public static final double level2ScoringPosition = (newRobot)? 0.535 : 0.51;
-    public static final double level3ScoringPosition = (newRobot)? 0.805 : 0.669;
-
-    public static final double lowAlgaeClear = 0.610;
-    public static final double highAlgaeClear = 0.894;
-
-    public static final boolean elevatorMotorInverted = true;
-
-    public static final double encoderToRevolutionRatio = 200.0;
-
-    public static final double rangeInRevolutions = (maximumElevatorHeight - minimumElevatorHeight)
-        * encoderToRevolutionRatio;
-
-    public static final int maximumAutoSpeed = 1; // Range: 0 to 1
-
-  }
-
-  public static final class CoralManipulatorConstants {
-    public static final int PivotMotorCanId = 42;
-    public static final int IntakeMotorCanId = 41;
-
-    public static final double intakeKp = 2.5;
-    public static final double intakeKi = 0.5;
-    public static final double intakeKd = 0.05;
-  
-    public static final double scoringKp = 3.0;
-    public static final double scoringKi = 0.0;
-    public static final double scoringKd = 0.10;
-  
-    public static final double transitKp = 2.0;
-    public static final double transitKi = 0.75;
-    public static final double transitKd = 0.1;
-
-    public static final double maxPivotSpeed = 0.1;
-
-    public static final double autoStopCurrent = 30;
-
-    public static final double maximumPivotPosition = 0.48;
-    public static final double minimumPivotPosition = 0.095;
-
-    public static final double intakePivotPosition = 0.314;
-    public static final double transitPivotPosition = 0.455;
-    public static final double levelOnePivotPosition = 0.3;
-    public static final double levelTwoPivotPosition = 0.193; // Motor Off: low hard limit
-    public static final double levelThreePivotPosition = 0.193;
-
-    public static final double clearPivotHeight = 0.191;
-  }
-  
-  public static final class ClimbingArmConstants {
-
-    public static final int motorCanId = 52;
-    
-  }
-
-  public static final class AlgaeConstants {
-
-    public static final int pivotMotorCANid = 31;
-    public static final int intakeMotorCANid = 32;
-    
-    public static final double minimumPivotPosition = 0.68;
-    public static final double maximumPivotPosition = 0.945; // Furthest possible is 0.951
-
-    public static final double intakeHeight = 0.7;
-    public static final double transitHeight = 0.925;
-
-    public static final double maximumAutoSpeed = 0.3;
-
-    public static final double pivotTolerence = 0.001;
-    
-    public static final double kP = -10;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    
   }
 
   public static final class AprilTagConstants {
