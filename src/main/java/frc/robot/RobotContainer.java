@@ -9,8 +9,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.AlignWithReefCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -169,7 +172,7 @@ public class RobotContainer {
                  * *
                  * DRIVER BUTTON MAPPING *
                  * *
-                 * \* * * * * * * * * * * *
+                 * \* * * * * * * * * * * *            
                  */
 
                 // Y button - Climbing mode
@@ -180,7 +183,9 @@ public class RobotContainer {
 
                 // X button -
                 c_driverController.x()
-                                .onTrue(new InstantCommand());
+                                .onTrue(new InstantCommand(() -> {
+                                        CommandScheduler.getInstance().cancelAll();
+                                }));
 
                 // B button -
                 c_driverController.b()
@@ -188,7 +193,7 @@ public class RobotContainer {
 
                 // A button -
                 c_driverController.a()
-                                .onTrue(new InstantCommand());
+                                .onTrue(new AlignWithReefCommand(m_robotDrive, VisionConstants.FRONT_RIGHT_CAMERA));
                         
                 }
 
